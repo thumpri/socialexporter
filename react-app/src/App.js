@@ -6,26 +6,26 @@ import { useLocation } from "react-router-dom";
 import './App.css'
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+	const { pathname } = useLocation();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+	useEffect(() => {
+		window.scrollTo(0, 0);
+	}, [pathname]);
 
-  return null;
+	return null;
 }
 
-const PrivateRoute = ({ component: Component, user, ...rest }) => (
+const PrivateRoute = ({ component: Component, user, appState, ...rest }) => (
 	<Route {...rest} render={(props) => (
 		<div >
-			{user === null &&
+			{appState.currentUser === null &&
 				<Redirect to={{
 					pathname: '/login',
 					state: { from: props.location }
 				}} />
 			}
-			{user === undefined && <div class="my-5 py-5 text-center"><div class="spinner-border"></div></div>}
-			{!!user && <Component {...props} user={user} />}
+			{appState.currentUser === undefined && <div class="my-5 py-5 text-center"><div class="spinner-border"></div></div>}
+			{!!appState.currentUser && <Component {...props} appState={appState} />}
 		</div>
 	)} />
 )
@@ -35,8 +35,21 @@ class App extends React.Component {
 	state = {}
 
 	componentDidMount() {
-		window.firebase.auth().onAuthStateChanged((user) => {
-			this.setState({ currentUser: user })
+		window.firebase.auth().onAuthStateChanged(async (user) => {
+			try {
+				let state = {
+					currentUser: user,
+				}
+				if (user) {
+					state.currentUserDoc = window.firebase.firestore().collection('users').doc(user.uid)
+					this.setState(state)
+					let result = await state.currentUserDoc.get()
+					state.currentUserData = result.data()
+				}
+				this.setState(state)
+			} catch (error) {
+				this.setState({})
+			}
 		});
 	}
 
@@ -56,11 +69,11 @@ class App extends React.Component {
 				<div>
 					<Switch>
 						{privateRoutes.map(r =>
-							<PrivateRoute path={r.path} component={r.component} key={r.path} user={this.state.currentUser} />
+							<PrivateRoute path={r.path} component={r.component} key={r.path} user={this.state.currentUser} appState={this.state} />
 						)}
 						{routes.map(r =>
-							<Route path={r.path}  key={r.path} user={this.state.currentUser} render={(props) => (
-								<r.component {...props} user={this.state.currentUser} />
+							<Route path={r.path} key={r.path} render={(props) => (
+								<r.component {...props} appState={this.state} />
 							)} />
 						)}
 					</Switch>
