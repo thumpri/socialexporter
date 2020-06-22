@@ -56,10 +56,10 @@ class App extends React.Component {
 	render() {
 
 		let privateRoutes = [
-
 		]
 		let routes = [
-			{ path: '/login', component: require('./components/Login').default },
+			// { path: '/login', component: require('./components/Login').default },
+			{ path: '/:username', component: require('./components/User').default },
 			{ path: '/', component: require('./components/Home').default },
 		]
 

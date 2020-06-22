@@ -26,7 +26,10 @@ class Home extends React.Component {
 
 			console.log(result, result.user, result.credential)
 
-			await this.props.appState.currentUserDoc.set({ twitterUsername: result.additionalUserInfo.username })
+			await this.props.appState.currentUserDoc.set({ 
+				twitterUsername: result.additionalUserInfo.username,
+				photoURL: result.user.photoURL,
+			})
 
 
 		} catch (error) {
@@ -36,7 +39,7 @@ class Home extends React.Component {
 
 	render() {
 		return (
-			<div class="container py-5" style={{ maxWidth: '40em' }}>
+			<div class="container py-5 max40" >
 				<div class="h1 text-center my-4">💬 Social Exporter</div>
 
 				<div class="lead text-center text-muted my-4">
@@ -54,11 +57,19 @@ class Home extends React.Component {
 
 				{this.props.appState.currentUserData &&
 					<div class="text-center my-5 py-5">
+						
 						<div class="small text-uppercase text-muted">Logged in as</div>
 						<div class=" my-2">
-							<img class="profile-pic mr-2 rounded-circle" src={this.props.appState.currentUser.photoURL} />
+							<img class="profile-pic mr-2 rounded-circle" src={this.props.appState.currentUserData.photoURL} />
 							{this.props.appState.currentUserData.twitterUsername}
 						</div>
+						
+						<div class="small text-uppercase text-muted mt-5">Your public email sign up page</div>
+						<div class="h5 my-2">
+							<Link to={'/'+this.props.appState.currentUserData.twitterUsername} target="_blank">{window.location+this.props.appState.currentUserData.twitterUsername}</Link>
+						</div>
+
+
 					</div>
 				}
 

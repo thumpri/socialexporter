@@ -48,7 +48,7 @@ class Login extends React.Component {
 	render() {
 		return (
 		<div class="container my-5">
-			<div class="h1 text-center my-5 py-5"><Link to="/" class="text-reset text-decoration-none">🦋 Buttrfly</Link></div>
+			<div class="h1 text-center my-5 py-5"><Link to="/" class="text-reset text-decoration-none">💬 Social Exporter</Link></div>
 
 			<form onSubmit={this.handleSubmit} class="mx-auto" style={{maxWidth:'20em'}}>
 
