@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from "react-router-dom"
 
+import * as FileSaver from 'file-saver'
+
 import App from '../App'
 
 
@@ -54,10 +56,25 @@ class Home extends React.Component {
 		await window.firebase.auth().signOut()
 	}
 
+
+	exportFollowers = async (event) => {
+		event.preventDefault()
+		// todo: page through results
+
+		let snapshot = await window.firebase.firestore().collection('followers').where('uid', '==', this.props.appState.currentUser.uid).get()
+		let followers = snapshot.docs.map(doc => ({ ...doc.data(), _id: doc.id }))
+		let emails = followers.map(f => f.followerEmail).filter((f,i,a) => !!f && a.indexOf(f) === i).join('\n')
+		// console.log(emails)
+
+		const blob = new Blob([emails], { type: 'text; charset=utf-8' })
+		FileSaver.saveAs(blob, 'followers.txt')
+	}
+
+
 	render() {
 		return (
 			<div class="container py-5 max40" >
-				<div class="h1 text-center my-4">💬 Social Exporter</div>
+				<div class="h2 text-center my-4">💬 Social Exporter</div>
 
 				<div class="lead text-center text-muted my-4">
 					Export Your Followers
@@ -83,12 +100,13 @@ class Home extends React.Component {
 
 						<div class="small text-uppercase text-muted mt-5">Your public email sign up page</div>
 						<div class="h5 my-2 overflow-auto">
-							<Link to={'/' + this.props.appState.currentUserData.twitterUsername} target="_blank">{window.location + this.props.appState.currentUserData.twitterUsername}</Link>
+							<Link to={'/' + this.props.appState.currentUserData.twitterUsername} target="_blank">{window.location.host + '/' + this.props.appState.currentUserData.twitterUsername}</Link>
 						</div>
 						<div class="small text-muted opacity-50 ">This is where your followers can submit their email to get signed up for your mailing list.</div>
 
 						<div class="small font-weight-500 my-5">
-							<Link to="/settings" class=" mx-2">Settings</Link>
+							<a class="mx-2" href="#" onClick={this.exportFollowers}>Export Followers</a>
+							<Link class=" mx-2" to="/settings">Settings</Link>
 							<a class="mx-2" href="#" onClick={this.logout}>Logout</a>
 						</div>
 

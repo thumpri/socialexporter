@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import App from '../App'
 
 
-class User extends React.Component {
+class UserSettings extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -82,4 +82,4 @@ class User extends React.Component {
 
 }
 
-export default User
+export default UserSettings
