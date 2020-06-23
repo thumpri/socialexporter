@@ -1,12 +1,17 @@
 
 .max20 {
 	max-width: 20em;
+	margin-right: auto;
+	margin-left: auto;
 }
 .max40 {
 	max-width: 40em;
+	margin-right: auto;
+	margin-left: auto;
 }
 
 .profile-pic {
+	width: 1.4em;
 	height: 1.4em;
 	vertical-align: -0.3em;
 }

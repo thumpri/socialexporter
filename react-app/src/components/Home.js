@@ -1,10 +1,12 @@
 import React from 'react'
 import { Link } from "react-router-dom"
 
+import App from '../App'
+
 
 class Home extends React.Component {
 
-	state = { }
+	state = {}
 
 
 	constructor(props) {
@@ -23,18 +25,33 @@ class Home extends React.Component {
 			// window.firebase.auth().signInWithRedirect(provider)
 
 			let result = await window.firebase.auth().signInWithPopup(provider)
-
 			console.log(result, result.user, result.credential)
-
-			await this.props.appState.currentUserDoc.set({ 
-				twitterUsername: result.additionalUserInfo.username,
-				photoURL: result.user.photoURL,
-			})
-
+			await this.updateUserData(result)
 
 		} catch (error) {
 			console.error(error.message || error);
 		}
+	}
+	updateUserData = async (result) => {
+		let doc = App.currentUserDoc(result.user.uid)
+		let snapshot = await doc.get()
+		if (snapshot && snapshot.exists) {
+			await App.currentUserDoc(result.user.uid).update({
+				twitterUsername: result.additionalUserInfo.username,
+				photoURL: result.user.photoURL,
+			})
+		}
+		else {
+			await App.currentUserDoc(result.user.uid).set({
+				twitterUsername: result.additionalUserInfo.username,
+				photoURL: result.user.photoURL,
+				descriptionText: 'Submit your email to get signed up for my mailing list!',
+			})
+		}
+	}
+	logout = async (event) => {
+		event.preventDefault()
+		await window.firebase.auth().signOut()
 	}
 
 	render() {
@@ -57,17 +74,24 @@ class Home extends React.Component {
 
 				{this.props.appState.currentUserData &&
 					<div class="text-center my-5 py-5">
-						
+
 						<div class="small text-uppercase text-muted">Logged in as</div>
 						<div class=" my-2">
 							<img class="profile-pic mr-2 rounded-circle" src={this.props.appState.currentUserData.photoURL} />
 							{this.props.appState.currentUserData.twitterUsername}
 						</div>
-						
+
 						<div class="small text-uppercase text-muted mt-5">Your public email sign up page</div>
-						<div class="h5 my-2">
-							<Link to={'/'+this.props.appState.currentUserData.twitterUsername} target="_blank">{window.location+this.props.appState.currentUserData.twitterUsername}</Link>
+						<div class="h5 my-2 overflow-auto">
+							<Link to={'/' + this.props.appState.currentUserData.twitterUsername} target="_blank">{window.location + this.props.appState.currentUserData.twitterUsername}</Link>
 						</div>
+						<div class="small text-muted opacity-50 ">This is where your followers can submit their email to get signed up for your mailing list.</div>
+
+						<div class="small font-weight-500 my-5">
+							<Link to="/settings" class=" mx-2">Settings</Link>
+							<a class="mx-2" href="#" onClick={this.logout}>Logout</a>
+						</div>
+
 
 
 					</div>

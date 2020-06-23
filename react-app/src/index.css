@@ -5,6 +5,8 @@
 .font-weight-800 { font-weight: 800; }
 .font-weight-900 { font-weight: 900; }
 
+.opacity-50 { opacity: 0.5; }
+
 .feather {
 	font-size: inherit;
 }

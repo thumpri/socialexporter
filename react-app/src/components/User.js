@@ -76,7 +76,7 @@ class User extends React.Component {
 						</div>
 
 						{this.state.userData.descriptionText &&
-							<div class="text-center text-muted my-5 ">
+							<div class="text-center text-muted my-5 max40">
 								{this.state.userData.descriptionText}
 							</div>
 						}
@@ -85,7 +85,7 @@ class User extends React.Component {
 						</div>
 
 						{!this.state.followerId &&
-							<form onSubmit={this.handleSubmit} class="my-5  max20 mx-auto">
+							<form onSubmit={this.handleSubmit} class="my-5  max20">
 
 								<div class="form-group">
 									<label htmlFor="email" class="small text-uppercase text-muted">Email address</label>
@@ -96,13 +96,11 @@ class User extends React.Component {
 								<div class=" my-4">
 									<button type="submit" class="btn btn-dark btn-block text-capitalize">Sign Up</button>
 								</div>
-
-
 							</form>
 						}
 
 						{this.state.followerId &&
-							<div class="text-center  my-5 p-3 bg-light max20 mx-auto">
+							<div class="text-center  my-5 p-3 bg-light max20">
 								<div class="h3">👍</div>
 								<div class="text-muted">Your email has been submitted</div>
 							</div>

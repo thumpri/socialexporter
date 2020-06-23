@@ -20,7 +20,7 @@ const PrivateRoute = ({ component: Component, user, appState, ...rest }) => (
 		<div >
 			{appState.currentUser === null &&
 				<Redirect to={{
-					pathname: '/login',
+					pathname: '/',
 					state: { from: props.location }
 				}} />
 			}
@@ -34,19 +34,20 @@ class App extends React.Component {
 
 	state = {}
 
+	static currentUserDoc = (uid) => window.firebase.firestore().collection('users').doc(uid)
+
 	componentDidMount() {
 		window.firebase.auth().onAuthStateChanged(async (user) => {
 			try {
-				let state = {
+				this.setState({
 					currentUser: user,
-				}
+					currentUserData: undefined,
+				})
 				if (user) {
-					state.currentUserDoc = window.firebase.firestore().collection('users').doc(user.uid)
-					this.setState(state)
-					let result = await state.currentUserDoc.get()
-					state.currentUserData = result.data()
+					App.currentUserDoc(user.uid).onSnapshot(doc => {
+						this.setState({ currentUserData: doc.data() })
+					})
 				}
-				this.setState(state)
 			} catch (error) {
 				this.setState({})
 			}
@@ -56,6 +57,7 @@ class App extends React.Component {
 	render() {
 
 		let privateRoutes = [
+			{ path: '/settings', component: require('./components/UserSettings').default },
 		]
 		let routes = [
 			// { path: '/login', component: require('./components/Login').default },
