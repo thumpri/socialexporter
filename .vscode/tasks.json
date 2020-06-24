@@ -10,6 +10,11 @@
 		},
 		{
 			"type": "shell",
+			"command": "firebase deploy --only functions",
+			"label": "🔥👍 functions",
+		},
+		{
+			"type": "shell",
 			"command": "firebase deploy --only hosting",
 			"label": "🔥👍 hosting",
 		},

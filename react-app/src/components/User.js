@@ -27,19 +27,25 @@ class User extends React.Component {
 
 	handleSubmit = async (event) => {
 		event.preventDefault()
-		console.log(this.email.current.value)
+
+		let query = new URLSearchParams(this.props.location.search);
+		// console.log(this.email.current.value, query.get('ref'))
 
 		try {
 			this.setState({ error: null })
 
 			if (!this.email.current.value) throw 'Please enter an email'
 
-			let docRef = await window.firebase.firestore().collection('followers').add({
+			let data = {
 				uid: this.state.userData.uid,
 				twitterUsername: this.state.userData.twitterUsername,
 				followerEmail: this.email.current.value,
-			})
-			console.log(docRef.id);
+				createdAt: new Date(),
+			}
+			if (query.get('ref')) data.referrer = query.get('ref')
+
+			let docRef = await window.firebase.firestore().collection('followers').add(data)
+			// console.log(docRef.id);
 
 			this.setState({ followerId: docRef.id })
 
@@ -50,7 +56,10 @@ class User extends React.Component {
 		}
 	}
 
-
+	referralLink = () => {
+		if (!this.state.followerId) return ''
+		return '/' + this.state.userData.twitterUsername + '?ref='+this.state.followerId
+	}
 
 	render() {
 		return (
@@ -100,10 +109,19 @@ class User extends React.Component {
 						}
 
 						{this.state.followerId &&
-							<div class="text-center  my-5 p-3 bg-light max20">
-								<div class="h3">👍</div>
-								<div class="text-muted">Your email has been submitted</div>
+							<div class="text-center">
+								<div class="text-center  my-5 p-3 bg-light max20">
+									<div class="h3">👍</div>
+									<div class="text-muted">Your email has been submitted</div>
+								</div>
+								<div class="small text-muted">Your referral link is:</div>
+								<div class=" my-2 overflow-auto">
+									<Link to={this.referralLink()} target="_blank">{window.location.host + this.referralLink()}</Link>
+								</div>
+								<div class="small text-muted">Share this link with others and you'll get credit for anyone who signs up from it.</div>
+
 							</div>
+
 						}
 					</div>
 				}
