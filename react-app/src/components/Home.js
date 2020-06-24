@@ -63,7 +63,7 @@ class Home extends React.Component {
 
 		let snapshot = await window.firebase.firestore().collection('followers').where('uid', '==', this.props.appState.currentUser.uid).get()
 		let followers = snapshot.docs.map(doc => ({ ...doc.data(), _id: doc.id }))
-		let emails = followers.map(f => f.followerEmail).filter((f,i,a) => !!f && a.indexOf(f) === i).join('\n')
+		let emails = followers.map(f => f.followerEmail).filter((f, i, a) => !!f && a.indexOf(f) === i).join('\n')
 		// console.log(emails)
 
 		const blob = new Blob([emails], { type: 'text; charset=utf-8' })
@@ -106,6 +106,7 @@ class Home extends React.Component {
 
 						<div class="small font-weight-500 my-5">
 							<a class="mx-2" href="#" onClick={this.exportFollowers}>Export Followers</a>
+							<Link class=" mx-2" to={"/" + this.props.appState.currentUserData.twitterUsername + "/leaderboard"}>Leaderboard</Link>
 							<Link class=" mx-2" to="/settings">Settings</Link>
 							<a class="mx-2" href="#" onClick={this.logout}>Logout</a>
 						</div>

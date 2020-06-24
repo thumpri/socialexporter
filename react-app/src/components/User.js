@@ -58,7 +58,7 @@ class User extends React.Component {
 
 	referralLink = () => {
 		if (!this.state.followerId) return ''
-		return '/' + this.state.userData.twitterUsername + '?ref='+this.state.followerId
+		return '/' + this.state.userData.twitterUsername + '?ref=' + this.state.followerId
 	}
 
 	render() {
@@ -119,6 +119,11 @@ class User extends React.Component {
 									<Link to={this.referralLink()} target="_blank">{window.location.host + this.referralLink()}</Link>
 								</div>
 								<div class="small text-muted">Share this link with others and you'll get credit for anyone who signs up from it.</div>
+
+
+								<div class="small font-weight-500 my-5">
+									<Link class=" mx-2" to={"/" + this.state.userData.twitterUsername + "/leaderboard"}>Show Referral Leaderboard</Link>
+								</div>
 
 							</div>
 

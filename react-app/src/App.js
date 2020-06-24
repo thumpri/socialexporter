@@ -62,6 +62,7 @@ class App extends React.Component {
 		let routes = [
 			// { path: '/login', component: require('./components/Login').default },
 			{ path: '/:username', component: require('./components/User').default },
+			{ path: '/:username/leaderboard', component: require('./components/UserLeaderboard').default },
 			{ path: '/', component: require('./components/Home').default },
 		]
 
@@ -71,10 +72,10 @@ class App extends React.Component {
 				<div>
 					<Switch>
 						{privateRoutes.map(r =>
-							<PrivateRoute path={r.path} component={r.component} key={r.path} user={this.state.currentUser} appState={this.state} />
+							<PrivateRoute exact path={r.path} component={r.component} key={r.path} user={this.state.currentUser} appState={this.state} />
 						)}
 						{routes.map(r =>
-							<Route path={r.path} key={r.path} render={(props) => (
+							<Route exact path={r.path} key={r.path} render={(props) => (
 								<r.component {...props} appState={this.state} />
 							)} />
 						)}
