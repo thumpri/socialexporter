@@ -57,7 +57,6 @@ class UserLeaderboard extends React.Component {
 						<div class="py-2">
 						</div>
 
-						<div class="h6 text-muted text-center my-5">Referral Leaderboard</div>
 						{!this.state.followers &&
 							<div class="my-5 py-5 text-center"><div class="spinner-border spinner-border-sm"></div></div>
 						}
@@ -65,16 +64,20 @@ class UserLeaderboard extends React.Component {
 							<div class="my-5 py-5 text-center small text-uppercase text-muted">No referrals yet</div>
 						}
 						{this.state.followers && this.state.followers.length > 0 &&
-							<table class="table table-borderless">
-								<tbody>
-									{this.state.followers.map(f =>
-										<tr key={f.followerId}>
-											<td class="text-monospace">{f.followerId}</td>
-											<td class="text-right">{f.referralCount}</td>
-										</tr>
-									)}
-								</tbody>
-							</table>
+							<div>
+								<div class="small text-muted text-center text-uppercase my-5">Referral Leaderboard</div>
+								<table class="table table-borderless">
+									<tbody>
+										{this.state.followers.map(f =>
+											<tr key={f.followerId}>
+												<td class="text-monospace">{f.followerId}</td>
+												<td class="">{f.followerEmail}</td>
+												<td class="text-right">{f.referralCount}</td>
+											</tr>
+										)}
+									</tbody>
+								</table>
+							</div>
 						}
 
 					</div>

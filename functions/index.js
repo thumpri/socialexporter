@@ -31,10 +31,16 @@ module.exports.userLeaderboard = functions.https.onCall(async (data, context) =>
 		let snapshot = await db.collection('followers').where('uid', '==', data.uid).orderBy('referralCount', 'desc').limit(10).get()
 		let followers = snapshot.docs.map(doc => ({ ...doc.data(), _id: doc.id }))
 
-		let followersData = followers.map(f => ({
-			followerId: f._id,
-			referralCount: f.referralCount,
-		}))
+		let followersData = followers.map(f => {
+			let result = {
+				followerId: f._id,
+				referralCount: f.referralCount,
+			}
+			if (context.auth && (context.auth.uid == data.uid)) {
+				result.followerEmail = f.followerEmail
+			}
+			return result
+		})
 
 		return followersData
 
