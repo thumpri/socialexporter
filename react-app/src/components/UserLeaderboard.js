@@ -21,8 +21,11 @@ class UserLeaderboard extends React.Component {
 			// console.log(userData);
 			this.setState({ userData: userData })
 
+			let followerId = window.localStorage.getItem(this.state.userData.uid + '-followerId')
+			this.setState({ followerId: followerId })
+
 			let result = await window.firebase.functions().httpsCallable('userLeaderboard')({ uid: userData.uid })
-			console.log(result.data)
+			// console.log(result.data)
 			this.setState({ followers: result.data })
 
 		} catch (error) {
@@ -70,7 +73,7 @@ class UserLeaderboard extends React.Component {
 									<tbody>
 										{this.state.followers.map(f =>
 											<tr key={f.followerId}>
-												<td class="text-monospace">{f.followerId}</td>
+												<td class="text-monospace">{f.followerId} {this.state.followerId == f.followerId && <span class="badge badge-light">You</span>}</td>
 												<td class="">{f.followerEmail}</td>
 												<td class="text-right">{f.referralCount}</td>
 											</tr>

@@ -19,6 +19,9 @@ class User extends React.Component {
 			// console.log(userData);
 			this.setState({ userData: userData })
 
+			let followerId = window.localStorage.getItem(this.state.userData.uid + '-followerId')
+			this.setState({ followerId: followerId })
+
 		} catch (error) {
 			console.error(error.message || error);
 			this.setState({ userData: null })
@@ -48,7 +51,7 @@ class User extends React.Component {
 			// console.log(docRef.id);
 
 			this.setState({ followerId: docRef.id })
-
+			window.localStorage.setItem(this.state.userData.uid + '-followerId', docRef.id)
 
 		} catch (e) {
 			console.log(e.message || e);
